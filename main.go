@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"order_kafe/config"
+	"order_kafe/database"
+)
 
 func main() {
-	fmt.Println("set up project")
+	conf := config.InitConfiguration()
+	database.InitDatabase(conf)
 }
