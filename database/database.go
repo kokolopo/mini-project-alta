@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"order_kafe/config"
+	"order_kafe/user"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -23,5 +24,5 @@ func InitDatabase(config config.Config) {
 	} else {
 		fmt.Println("koneksi ke database berhasil!!!")
 	}
-	//DB.AutoMigrate(&user.User{})
+	DB.AutoMigrate(&user.User{})
 }
