@@ -9,6 +9,8 @@ import (
 type UserService interface {
 	Register(input InputRegister) (User, error)
 	Login(input InputLogin) (User, error)
+	IsEmailAvailable(input InputCheckEmail) (bool, error)
+	UpdateUser(input InputUpdate) (User, error)
 }
 
 type userService struct {
@@ -52,6 +54,8 @@ func (s *userService) Login(input InputLogin) (User, error) {
 	if err != nil {
 		return user, err
 	}
+
+	//cek jika user tidak ada
 	if user.ID == 0 {
 		return user, errors.New("no user found")
 	}
@@ -62,4 +66,38 @@ func (s *userService) Login(input InputLogin) (User, error) {
 	}
 
 	return user, nil
+}
+
+func (s *userService) IsEmailAvailable(input InputCheckEmail) (bool, error) {
+	email := input.Email
+
+	user, err := s.repository.FindByEmail(email)
+	if err != nil {
+		return false, err
+	}
+
+	if user.ID == 0 {
+		return true, nil
+	}
+
+	return false, nil
+}
+
+func (s *userService) UpdateUser(input InputUpdate) (User, error) {
+	user, err := s.repository.FindById(input.ID)
+	if err != nil {
+		return user, err
+	}
+
+	user.NamaLengkap = input.NamaLengkap
+	user.Email = input.Email
+	user.Whatsapp = input.Whatsapp
+	user.Password = input.Password
+
+	updatedUser, err := s.repository.Update(user)
+	if err != nil {
+		return updatedUser, err
+	}
+
+	return updatedUser, nil
 }

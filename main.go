@@ -22,8 +22,10 @@ func main() {
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
-	api.POST("/register", userController.UserRegister)
-	api.POST("/login", userController.Login)
+	api.POST("/users", userController.UserRegister)
+	api.POST("/sessions", userController.Login)
+	api.POST("/email_checkers", userController.CheckEmailAvailability)
+	api.PUT("/users/:id", userController.UpdateData)
 
 	router.Run(":8080")
 }

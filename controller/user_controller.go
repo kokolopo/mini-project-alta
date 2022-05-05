@@ -5,6 +5,7 @@ import (
 	"order_kafe/auth"
 	"order_kafe/helper"
 	"order_kafe/user"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +21,7 @@ func NewUserHandler(userService user.UserService, authService auth.Service) *use
 
 func (ctrl *userController) UserRegister(c *gin.Context) {
 	var input user.InputRegister
-	err := c.Bind(&input)
+	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		res := helper.ApiResponse("New User Data Has Been Failed", http.StatusUnprocessableEntity, "failed", err)
 
@@ -52,7 +53,7 @@ func (ctrl *userController) UserRegister(c *gin.Context) {
 func (h *userController) Login(c *gin.Context) {
 	var input user.InputLogin
 
-	err := c.Bind(&input)
+	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		res := helper.ApiResponse("Login Failed", http.StatusUnprocessableEntity, "failed", err)
 		c.JSON(http.StatusUnprocessableEntity, res)
@@ -80,4 +81,63 @@ func (h *userController) Login(c *gin.Context) {
 	res := helper.ApiResponse("Successfuly Login", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusCreated, res)
+}
+
+func (h *userController) CheckEmailAvailability(c *gin.Context) {
+	var input user.InputCheckEmail
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.ApiResponse("Email checking failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	isEmailAvailable, err := h.userService.IsEmailAvailable(input)
+	if err != nil {
+		errorMessage := gin.H{"errors": "Server error"}
+		response := helper.ApiResponse("Email checking failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	data := gin.H{
+		"is_available": isEmailAvailable,
+	}
+
+	metaMessage := "Email has been registered"
+
+	if isEmailAvailable {
+		metaMessage = "Email is available"
+	}
+
+	response := helper.ApiResponse(metaMessage, http.StatusOK, "success", data)
+	c.JSON(http.StatusOK, response)
+}
+
+func (h *userController) UpdateData(c *gin.Context) {
+	idParam := c.Param("id")
+	id, _ := strconv.Atoi(idParam)
+
+	var input user.InputUpdate
+
+	err := c.ShouldBind(&input)
+	if err != nil {
+		input.Error = err
+		c.HTML(http.StatusOK, "user_edit.html", input)
+		return
+	}
+
+	input.ID = id
+
+	_, err = h.userService.UpdateUser(input)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "error.html", nil)
+		return
+	}
+
+	c.Redirect(http.StatusFound, "/users")
 }
