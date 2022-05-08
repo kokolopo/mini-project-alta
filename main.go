@@ -5,7 +5,7 @@ import (
 	"order_kafe/config"
 	"order_kafe/controller"
 	"order_kafe/database"
-	"order_kafe/menu"
+	"order_kafe/item"
 	"order_kafe/user"
 
 	"github.com/gin-gonic/gin"
@@ -21,9 +21,9 @@ func main() {
 	authService := auth.NewService()
 	userController := controller.NewUserHandler(userService, authService)
 
-	menuRepo := menu.NewMenuRepository(db)
-	menuService := menu.NewMenuService(menuRepo)
-	menuController := controller.NewMenuHandler(menuService)
+	itemRepo := item.NewItemRepository(db)
+	itemService := item.NewItemService(itemRepo)
+	itemController := controller.NewItemHandler(itemService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
@@ -34,7 +34,7 @@ func main() {
 	api.POST("/email_checkers", userController.CheckEmailAvailability)
 	api.PUT("/users/:id", userController.UpdateData)
 
-	// Menu domain
-	api.POST("/menu", menuController.CreateNewMenu)
+	// item domain
+	api.POST("/item", itemController.CreateNewitem)
 	router.Run(":8080")
 }

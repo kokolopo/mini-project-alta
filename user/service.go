@@ -31,9 +31,8 @@ func (s *userService) Register(input InputRegister) (User, error) {
 	}
 
 	//tangkap nilai dari inputan
-	newUser.NamaLengkap = input.NamaLengkap
+	newUser.Fullname = input.Fullname
 	newUser.Email = input.Email
-	newUser.Whatsapp = input.Whatsapp
 	newUser.Password = string(passwordHash)
 	newUser.Role = "user"
 
@@ -89,9 +88,8 @@ func (s *userService) UpdateUser(input InputUpdate) (User, error) {
 		return user, err
 	}
 
-	user.NamaLengkap = input.NamaLengkap
+	user.Fullname = input.Fullname
 	user.Email = input.Email
-	user.Whatsapp = input.Whatsapp
 	user.Password = input.Password
 
 	updatedUser, err := s.repository.Update(user)
