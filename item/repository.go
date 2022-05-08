@@ -4,9 +4,10 @@ import "gorm.io/gorm"
 
 type ItemRepository interface {
 	Save(item Item) (Item, error)
+	FetchAll() ([]Item, error)
 	FindById(id int) (Item, error)
 	Update(item Item) (Item, error)
-	Delete(id int) (Item, error)
+	Delete(item Item) (Item, error)
 }
 
 type itemRepository struct {
@@ -24,6 +25,17 @@ func (r *itemRepository) Save(item Item) (Item, error) {
 	}
 
 	return item, nil
+}
+
+func (r *itemRepository) FetchAll() ([]Item, error) {
+	var items []Item
+
+	err := r.DB.Find(&items).Error
+	if err != nil {
+		return items, err
+	}
+
+	return items, nil
 }
 
 func (r *itemRepository) FindById(id int) (Item, error) {
@@ -46,10 +58,8 @@ func (r *itemRepository) Update(item Item) (Item, error) {
 	return item, nil
 }
 
-func (r *itemRepository) Delete(id int) (Item, error) {
-	var item Item
-
-	err := r.DB.Where("id = ?", id).Delete(&item).Error
+func (r *itemRepository) Delete(item Item) (Item, error) {
+	err := r.DB.Delete(&item).Error
 	if err != nil {
 		return item, err
 	}

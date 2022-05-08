@@ -35,6 +35,10 @@ func main() {
 	api.PUT("/users/:id", userController.UpdateData)
 
 	// item domain
-	api.POST("/item", itemController.CreateNewitem)
+	api.POST("/items", itemController.CreateNewitem)
+	api.GET("/items", itemController.GetItems)
+	api.PUT("/items/:id", itemController.UpdateItems)
+	api.DELETE("/items/:id", itemController.DeleteItems)
+
 	router.Run(":8080")
 }
