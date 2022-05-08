@@ -1,7 +1,7 @@
 package user
 
 type InputRegister struct {
-	Fullname string `json:"nama_lengkap" binding:"required"`
+	Fullname string `json:"fullname" binding:"required"`
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
 }
@@ -17,7 +17,7 @@ type InputCheckEmail struct {
 
 type InputUpdate struct {
 	ID       int
-	Fullname string `json:"nama_lengkap"`
+	Fullname string `json:"fullname"`
 	Email    string `json:"email" binding:"email"`
 	Avatar   string `json:"avatar"`
 	Password string `json:"password"`
