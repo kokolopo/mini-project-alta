@@ -35,8 +35,8 @@ func (ctrl *userController) UserRegister(c *gin.Context) {
 		res := helper.ApiResponse("New User Data Has Been Failed", http.StatusBadRequest, "failed", errUser)
 
 		c.JSON(http.StatusBadRequest, res)
+		return
 	}
-
 
 	token, errToken := ctrl.authService.GenerateTokenJWT(newUser.ID, newUser.Fullname, newUser.Role)
 
@@ -44,6 +44,7 @@ func (ctrl *userController) UserRegister(c *gin.Context) {
 		res := helper.ApiResponse("New User Data Has Been Failed", http.StatusBadRequest, "failed", errUser)
 
 		c.JSON(http.StatusBadRequest, res)
+		return
 	}
 
 	formatter := user.FormatUser(newUser, token)
@@ -71,11 +72,10 @@ func (h *userController) Login(c *gin.Context) {
 		return
 	}
 
-
 	token, errToken := h.authService.GenerateTokenJWT(loginUser.ID, loginUser.Fullname, loginUser.Role)
 
 	if errToken != nil {
-		res := helper.ApiResponse("New User Data Has Been Failed", http.StatusBadRequest, "failed", errToken)
+		res := helper.ApiResponse("Fail Create Token", http.StatusBadRequest, "failed", errToken)
 
 		c.JSON(http.StatusBadRequest, res)
 		return
