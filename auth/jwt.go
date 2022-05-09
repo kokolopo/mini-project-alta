@@ -1,12 +1,11 @@
 package auth
 
 import (
+	"order_kafe/config"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
-
-var SECRET_KEY = []byte("fahmi_A12019")
 
 type Service interface {
 	GenerateTokenJWT(id int, name string) (string, error)
@@ -27,7 +26,7 @@ func (s *jwtService) GenerateTokenJWT(userId int, name string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 
-	signedToken, err := token.SignedString(SECRET_KEY)
+	signedToken, err := token.SignedString(config.InitConfiguration().JWT_KEY)
 	if err != nil {
 		return signedToken, err
 	}

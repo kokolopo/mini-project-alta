@@ -26,6 +26,7 @@ func main() {
 	api.POST("/sessions", userController.Login)
 	api.POST("/email_checkers", userController.CheckEmailAvailability)
 	api.PUT("/users/:id", userController.UpdateData)
+	api.POST("/avatars", userController.UploadAvatar)
 
 	router.Run(":8080")
 }

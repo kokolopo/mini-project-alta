@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"order_kafe/auth"
 	"order_kafe/helper"
@@ -36,7 +37,7 @@ func (ctrl *userController) UserRegister(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, res)
 	}
 
-	token, errToken := ctrl.authService.GenerateTokenJWT(newUser.ID, newUser.NamaLengkap)
+	token, errToken := ctrl.authService.GenerateTokenJWT(newUser.ID, newUser.Fullname)
 	if errToken != nil {
 		res := helper.ApiResponse("New User Data Has Been Failed", http.StatusBadRequest, "failed", errUser)
 
@@ -68,7 +69,7 @@ func (h *userController) Login(c *gin.Context) {
 		return
 	}
 
-	token, errToken := h.authService.GenerateTokenJWT(loginUser.ID, loginUser.NamaLengkap)
+	token, errToken := h.authService.GenerateTokenJWT(loginUser.ID, loginUser.Fullname)
 	if errToken != nil {
 		res := helper.ApiResponse("New User Data Has Been Failed", http.StatusBadRequest, "failed", errToken)
 
@@ -116,6 +117,45 @@ func (h *userController) CheckEmailAvailability(c *gin.Context) {
 
 	response := helper.ApiResponse(metaMessage, http.StatusOK, "success", data)
 	c.JSON(http.StatusOK, response)
+}
+
+func (h *userController) UploadAvatar(c *gin.Context) {
+	file, err := c.FormFile("avatar")
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	// harusnya didapatkan dari JWT
+	userId := 1
+
+	path := fmt.Sprintf("images/%d-%s", userId, file.Filename)
+
+	errImage := c.SaveUploadedFile(file, path)
+	if errImage != nil {
+		data := gin.H{"is_uploaded": false}
+		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	_, errUser := h.userService.SaveAvatar(userId, path)
+	if errUser != nil {
+		data := gin.H{"is_uploaded": false}
+		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	data := gin.H{"is_uploaded": true}
+	res := helper.ApiResponse("Avatar Successfuly Uploaded", http.StatusBadRequest, "success", data)
+
+	c.JSON(http.StatusOK, res)
 }
 
 func (h *userController) UpdateData(c *gin.Context) {
