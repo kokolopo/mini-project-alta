@@ -133,8 +133,9 @@ func (h *userController) UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	// harusnya didapatkan dari JWT
-	userId := 1
+	// didapatkan dari JWT
+	currentUser := c.MustGet("currentUser").(user.User)
+	userId := currentUser.ID
 
 	path := fmt.Sprintf("images/%d-%s", userId, file.Filename)
 
@@ -157,7 +158,7 @@ func (h *userController) UploadAvatar(c *gin.Context) {
 	}
 
 	data := gin.H{"is_uploaded": true}
-	res := helper.ApiResponse("Avatar Successfuly Uploaded", http.StatusBadRequest, "success", data)
+	res := helper.ApiResponse("Avatar Successfuly Uploaded", http.StatusOK, "success", data)
 
 	c.JSON(http.StatusOK, res)
 }

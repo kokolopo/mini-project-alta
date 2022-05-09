@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"order_kafe/config"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 
 type Service interface {
 	GenerateTokenJWT(id int, name string, role string) (string, error)
+	ValidateToken(token string) (*jwt.Token, error)
 }
 
 type jwtService struct {
@@ -34,4 +36,23 @@ func (s *jwtService) GenerateTokenJWT(id int, name string, role string) (string,
 	}
 
 	return signedToken, nil
+}
+
+func (s *jwtService) ValidateToken(encodedToken string) (*jwt.Token, error) {
+	token, err := jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+
+		if !ok {
+			return nil, errors.New("invalid token")
+		}
+
+		return []byte(config.InitConfiguration().JWT_KEY), nil
+
+	})
+
+	if err != nil {
+		return token, err
+	}
+
+	return token, nil
 }

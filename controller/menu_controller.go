@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 	"order_kafe/helper"
 	"order_kafe/item"
+	"order_kafe/user"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +20,15 @@ func NewItemHandler(itemService item.ItemService) *itemController {
 }
 
 func (ctrl *itemController) CreateNewItem(c *gin.Context) {
+	currentUser := c.MustGet("currentUser").(user.User)
+	userRole := currentUser.Role
+	if userRole != "admin" {
+		res := helper.ApiResponse("New Data Has Been Failed", http.StatusBadRequest, "failed", errors.New("kamu bukan admin"))
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
 	var input item.InputNewItem
 
 	err := c.ShouldBindJSON(&input)
@@ -33,6 +44,7 @@ func (ctrl *itemController) CreateNewItem(c *gin.Context) {
 		res := helper.ApiResponse("New Data Has Been Failed", http.StatusBadRequest, "failed", errUser)
 
 		c.JSON(http.StatusBadRequest, res)
+		return
 	}
 
 	//formatter := user.Formatitem(newitem)

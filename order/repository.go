@@ -4,10 +4,9 @@ import "gorm.io/gorm"
 
 type OrderRepository interface {
 	Save(order Order) (Order, error)
-	FetchAll() ([]Order, error)
-	FindById(id int) (Order, error)
-	Update(order Order) (Order, error)
-	Delete(order Order) (Order, error)
+	// FindById(id int) (Order, error)
+	// FindByEmail(email string) (Order, error)
+	// Update(user Order) (Order, error)
 }
 
 type orderRepository struct {

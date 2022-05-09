@@ -7,12 +7,12 @@ type OrderService interface {
 }
 
 type orderService struct {
-	repository     orderRepository
-	userRepository user.UserRepository
+	repository OrderRepository
+	userRepo   user.UserRepository
 }
 
-func NewOrderService(repository orderRepository, userRepository user.UserRepository) *orderService {
-	return &orderService{repository, userRepository}
+func NewOrderService(repository OrderRepository, userRepo user.UserRepository) *orderService {
+	return &orderService{repository, userRepo}
 }
 
 func (s *orderService) CreateOrder(input InputNewOrder) (Order, error) {
@@ -20,7 +20,7 @@ func (s *orderService) CreateOrder(input InputNewOrder) (Order, error) {
 
 	order.Infomation = "payment checking"
 
-	user, errUser := s.userRepository.FindById(input.UserID)
+	user, errUser := s.userRepo.FindById(input.UserID)
 	if errUser != nil {
 		return order, errUser
 	}
