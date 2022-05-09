@@ -18,7 +18,9 @@ func NewService() *jwtService {
 	return &jwtService{}
 }
 
+
 func (s *jwtService) GenerateTokenJWT(userId int, name string, role string) (string, error) {
+
 	claim := jwt.MapClaims{}
 	claim["id"] = userId
 	claim["name"] = name
