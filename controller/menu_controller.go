@@ -17,7 +17,7 @@ func NewItemHandler(itemService item.ItemService) *itemController {
 	return &itemController{itemService}
 }
 
-func (ctrl *itemController) CreateNewitem(c *gin.Context) {
+func (ctrl *itemController) CreateNewItem(c *gin.Context) {
 	var input item.InputNewItem
 
 	err := c.ShouldBindJSON(&input)

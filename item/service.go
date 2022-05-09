@@ -1,5 +1,7 @@
 package item
 
+import "order_kafe/category"
+
 type ItemService interface {
 	CreateNewItem(input InputNewItem) (Item, error)
 	GetAllItem() ([]Item, error)
@@ -9,11 +11,12 @@ type ItemService interface {
 }
 
 type itemService struct {
-	repository ItemRepository
+	repository         ItemRepository
+	categoryRepository category.CategoryRepository
 }
 
-func NewItemService(repository ItemRepository) *itemService {
-	return &itemService{repository}
+func NewItemService(repository ItemRepository, categoryRepository category.CategoryRepository) *itemService {
+	return &itemService{repository, categoryRepository}
 }
 
 func (s *itemService) CreateNewItem(input InputNewItem) (Item, error) {
@@ -23,9 +26,16 @@ func (s *itemService) CreateNewItem(input InputNewItem) (Item, error) {
 	item.Name = input.Name
 	item.Description = input.Description
 	item.Price = input.Price
-	item.Category = input.Category
+	item.CategoryID = input.CategoryID
 	item.ImageUrl = "Default.jpg"
 	item.IsAvailable = 1
+
+	category, errCate := s.categoryRepository.FindById(input.CategoryID)
+	if errCate != nil {
+		return item, errCate
+	}
+
+	item.Category = category
 
 	//save data yang sudah dimapping kedalam struct Mahasiswa
 	newItem, err := s.repository.Save(item)
@@ -68,7 +78,7 @@ func (s *itemService) UpdateItem(id int, input InputUpdateItem) (Item, error) {
 	item.Name = input.Name
 	item.Description = input.Description
 	item.Price = input.Price
-	item.Category = input.Category
+	item.CategoryID = input.CategoryID
 	item.IsAvailable = input.IsAvailable
 
 	updatedItem, errUpdate := s.repository.Update(item)
