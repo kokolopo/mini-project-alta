@@ -8,7 +8,7 @@ import (
 )
 
 type Service interface {
-	GenerateTokenJWT(id int, name string) (string, error)
+	GenerateTokenJWT(id int, name string, role string) (string, error)
 }
 
 type jwtService struct {
@@ -18,11 +18,13 @@ func NewService() *jwtService {
 	return &jwtService{}
 }
 
-// generate JWT token
-func (s *jwtService) GenerateTokenJWT(userId int, name string) (string, error) {
+
+func (s *jwtService) GenerateTokenJWT(userId int, name string, role string) (string, error) {
+
 	claim := jwt.MapClaims{}
 	claim["id"] = userId
 	claim["name"] = name
+	claim["role"] = role
 	claim["exp"] = time.Now().Add(time.Hour * 2).Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)

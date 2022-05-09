@@ -10,6 +10,7 @@ type UserService interface {
 	Register(input InputRegister) (User, error)
 	Login(input InputLogin) (User, error)
 	IsEmailAvailable(input InputCheckEmail) (bool, error)
+	SaveAvatar(id int, fileLocation string) (User, error)
 	UpdateUser(input InputUpdate) (User, error)
 }
 
@@ -95,6 +96,22 @@ func (s *userService) UpdateUser(input InputUpdate) (User, error) {
 	updatedUser, err := s.repository.Update(user)
 	if err != nil {
 		return updatedUser, err
+	}
+
+	return updatedUser, nil
+}
+
+func (s *userService) SaveAvatar(id int, fileLocation string) (User, error) {
+	user, err := s.repository.FindById(id)
+	if err != nil {
+		return user, err
+	}
+
+	user.Avatar = fileLocation
+
+	updatedUser, errUpdate := s.repository.Update(user)
+	if errUpdate != nil {
+		return updatedUser, errUpdate
 	}
 
 	return updatedUser, nil
