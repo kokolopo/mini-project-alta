@@ -30,6 +30,7 @@ func (s *itemService) CreateNewItem(input InputNewItem) (Item, error) {
 	item.ImageUrl = "Default.jpg"
 	item.IsAvailable = 1
 
+	//cek apakah categori ada
 	category, errCate := s.categoryRepository.FindById(input.CategoryID)
 	if errCate != nil {
 		return item, errCate
