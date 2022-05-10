@@ -1,7 +1,7 @@
 package detail
 
 type DetailOrderService interface {
-	SaveDetailOrder(input []InputNewDetailOrder) ([]DetailOrder, error)
+	SaveDetailOrder(orderId int, input []InputNewDetailOrder) ([]DetailOrder, error)
 }
 
 type detailOrderService struct {
@@ -12,7 +12,7 @@ func NewDetailOrderService(repository DetailOrderRepository) *detailOrderService
 	return &detailOrderService{repository}
 }
 
-func (s *detailOrderService) SaveDetailOrder(input []InputNewDetailOrder) ([]DetailOrder, error) {
+func (s *detailOrderService) SaveDetailOrder(orderId int, input []InputNewDetailOrder) ([]DetailOrder, error) {
 	var detail []DetailOrder
 
 	//tangkap nilai dari inputan
@@ -22,7 +22,7 @@ func (s *detailOrderService) SaveDetailOrder(input []InputNewDetailOrder) ([]Det
 	// detail.Note = input.Note
 
 	for _, v := range input {
-		detail = append(detail, DetailOrder{OrderID: v.OrderID, ItemID: v.ItemID, Quantity: v.Quantity, Note: v.Note})
+		detail = append(detail, DetailOrder{OrderID: orderId, ItemID: v.ItemID, Quantity: v.Quantity, Note: v.Note})
 	}
 
 	// for _, v := range detail {

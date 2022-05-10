@@ -43,12 +43,12 @@ func main() {
 	itemController := controller.NewItemHandler(itemService)
 
 	orderRepo := order.NewOrderRepository(db)
-	orderService := order.NewOrderService(orderRepo, userRepo)
-	orderController := controller.NewOrderHandler(orderService)
-
 	detailRepo := detail.NewDetailOrderRepository(db)
 	detailService := detail.NewDetailOrderService(detailRepo)
-	detailController := controller.NewDetailHandler(detailService)
+	orderService := order.NewOrderService(orderRepo, userRepo)
+	orderController := controller.NewOrderHandler(orderService, detailService)
+
+	//detailController := controller.NewDetailHandler(detailService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
@@ -73,7 +73,7 @@ func main() {
 
 	// order domain
 	api.POST("/orders", authMiddleware(authService, userService), orderController.CreateNewOrder)
-	api.POST("/details", detailController.SaveDetailOrder)
+	//api.POST("/details", detailController.SaveDetailOrder)
 
 	router.Run(":8080")
 }
