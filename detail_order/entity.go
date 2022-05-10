@@ -1,4 +1,4 @@
-package detailorder
+package detail
 
 import (
 	"order_kafe/item"

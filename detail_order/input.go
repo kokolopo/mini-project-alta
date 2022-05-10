@@ -1,4 +1,4 @@
-package detailorder
+package detail
 
 type InputNewDetailOrder struct {
 	OrderID  int    `json:"order_id" binding:"required"`

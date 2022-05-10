@@ -7,6 +7,7 @@ import (
 	"order_kafe/config"
 	"order_kafe/controller"
 	"order_kafe/database"
+	detail "order_kafe/detail_order"
 	"order_kafe/helper"
 	"order_kafe/item"
 	"order_kafe/order"
@@ -22,15 +23,11 @@ func main() {
 	database.InitDatabase(conf)
 	db := database.DB
 
-	// orderRepo := order.NewOrderRepository(db)
-	// userRepo := user.NewUserRepository(db)
-	//
-
-	// var input order.InputNewOrder
-	// input.UserID = 7
-	// input.Infomation = "wait a payment"
-
-	//orderService.CreateOrder(input)
+	// data := []detail.InputNewDetailOrder{
+	// 	{OrderID: 2, ItemID: 2, Quantity: 2, Note: "banyakin yaaa"},
+	// 	{OrderID: 2, ItemID: 1, Quantity: 1, Note: "yg enak yaaa"},
+	// }
+	// detailService.SaveDetailOrder(data)
 
 	userRepo := user.NewUserRepository(db)
 	userService := user.NewUserService(userRepo)
@@ -48,6 +45,10 @@ func main() {
 	orderRepo := order.NewOrderRepository(db)
 	orderService := order.NewOrderService(orderRepo, userRepo)
 	orderController := controller.NewOrderHandler(orderService)
+
+	detailRepo := detail.NewDetailOrderRepository(db)
+	detailService := detail.NewDetailOrderService(detailRepo)
+	detailController := controller.NewDetailHandler(detailService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
@@ -72,6 +73,7 @@ func main() {
 
 	// order domain
 	api.POST("/orders", authMiddleware(authService, userService), orderController.CreateNewOrder)
+	api.POST("/details", detailController.SaveDetailOrder)
 
 	router.Run(":8080")
 }

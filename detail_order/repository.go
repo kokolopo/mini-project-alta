@@ -1,13 +1,9 @@
-package detailorder
+package detail
 
 import "gorm.io/gorm"
 
 type DetailOrderRepository interface {
-	Save(detailOrder []DetailOrder) (DetailOrder, error)
-	// FetchAll() ([]DetailOrder, error)
-	// FindById(id int) (DetailOrder, error)
-	// Update(detailOrder DetailOrder) (DetailOrder, error)
-	// Delete(detailOrder DetailOrder) (DetailOrder, error)
+	Save(detail []DetailOrder) ([]DetailOrder, error)
 }
 
 type detailOrderRepository struct {
@@ -18,11 +14,11 @@ func NewDetailOrderRepository(db *gorm.DB) *detailOrderRepository {
 	return &detailOrderRepository{db}
 }
 
-func (r *detailOrderRepository) Save(detailOrder []DetailOrder) ([]DetailOrder, error) {
-	err := r.DB.Create(&detailOrder).Error
+func (r *detailOrderRepository) Save(detail []DetailOrder) ([]DetailOrder, error) {
+	err := r.DB.Create(&detail).Error
 	if err != nil {
-		return detailOrder, err
+		return detail, err
 	}
 
-	return detailOrder, nil
+	return detail, nil
 }

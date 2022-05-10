@@ -2,6 +2,7 @@ package database
 
 import (
 	"order_kafe/category"
+	detail "order_kafe/detail_order"
 	"order_kafe/item"
 	"order_kafe/order"
 	"order_kafe/user"
@@ -17,5 +18,6 @@ func RegisterModel() []Model {
 		{Model: item.Item{}},
 		{Model: category.Categorie{}},
 		{Model: order.Order{}},
+		{Model: detail.DetailOrder{}},
 	}
 }
