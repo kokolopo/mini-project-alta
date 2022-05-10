@@ -3,7 +3,7 @@ package order
 import "order_kafe/user"
 
 type OrderService interface {
-	CreateOrder(input InputNewOrder) (Order, error)
+	CreateOrder(id int) (Order, error)
 }
 
 type orderService struct {
@@ -15,17 +15,16 @@ func NewOrderService(repository OrderRepository, userRepo user.UserRepository) *
 	return &orderService{repository, userRepo}
 }
 
-func (s *orderService) CreateOrder(input InputNewOrder) (Order, error) {
+func (s *orderService) CreateOrder(id int) (Order, error) {
 	var order Order
 
-	order.Infomation = "payment checking"
-
-	user, errUser := s.userRepo.FindById(input.UserID)
+	user, errUser := s.userRepo.FindById(id)
 	if errUser != nil {
 		return order, errUser
 	}
 	order.UserID = user.ID
 	order.User = user
+	order.Infomation = "payment checking"
 
 	newOrder, errOrder := s.repository.Save(order)
 	if errOrder != nil {

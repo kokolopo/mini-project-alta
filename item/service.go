@@ -4,6 +4,7 @@ import "order_kafe/category"
 
 type ItemService interface {
 	CreateNewItem(input InputNewItem) (Item, error)
+	SaveImage(id int, fileLocation string) (Item, error)
 	GetAllItem() ([]Item, error)
 	GetById(id int) (Item, error)
 	UpdateItem(id int, input InputUpdateItem) (Item, error)
@@ -27,7 +28,7 @@ func (s *itemService) CreateNewItem(input InputNewItem) (Item, error) {
 	item.Description = input.Description
 	item.Price = input.Price
 	item.CategoryID = input.CategoryID
-	item.ImageUrl = "Default.jpg"
+	item.ImageUrl = "images/Default.jpg"
 	item.IsAvailable = 1
 
 	//cek apakah categori ada
@@ -45,6 +46,22 @@ func (s *itemService) CreateNewItem(input InputNewItem) (Item, error) {
 	}
 
 	return newItem, nil
+}
+
+func (s *itemService) SaveImage(id int, fileLocation string) (Item, error) {
+	item, err := s.repository.FindById(id)
+	if err != nil {
+		return item, err
+	}
+
+	item.ImageUrl = fileLocation
+
+	updatedUser, errUpdate := s.repository.Update(item)
+	if errUpdate != nil {
+		return updatedUser, errUpdate
+	}
+
+	return updatedUser, nil
 }
 
 func (s *itemService) GetAllItem() ([]Item, error) {

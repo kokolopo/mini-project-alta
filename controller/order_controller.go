@@ -1,8 +1,10 @@
 package controller
 
 import (
-	"order_kafe/item"
+	"net/http"
+	"order_kafe/helper"
 	"order_kafe/order"
+	"order_kafe/user"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,12 +13,25 @@ type orderController struct {
 	orderService order.OrderService
 }
 
-func NewOrderHandler(itemService item.ItemService) *itemController {
-	return &itemController{itemService}
+func NewOrderHandler(orderService order.OrderService) *orderController {
+	return &orderController{orderService}
 }
 
 func (ctrl *orderController) CreateNewOrder(c *gin.Context) {
-	// dapatkan id user dari session yang sedang login
-	// mapping data body ke struct order detail
+	// didapatkan dari JWT
+	currentUser := c.MustGet("currentUser").(user.User)
+	userId := currentUser.ID
 
+	newOrder, errCate := ctrl.orderService.CreateOrder(userId)
+	if errCate != nil {
+		res := helper.ApiResponse("Order Has Been Failed", http.StatusBadRequest, "failed", errCate)
+
+		c.JSON(http.StatusBadRequest, res)
+	}
+
+	//formatter := user.Formatitem(newOrder)
+
+	res := helper.ApiResponse("Order Has Been Created", http.StatusCreated, "success", newOrder)
+
+	c.JSON(http.StatusCreated, res)
 }

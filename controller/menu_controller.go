@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"order_kafe/helper"
 	"order_kafe/item"
@@ -20,10 +21,11 @@ func NewItemHandler(itemService item.ItemService) *itemController {
 }
 
 func (ctrl *itemController) CreateNewItem(c *gin.Context) {
+	// cek apakah yg akses adalah admin
 	currentUser := c.MustGet("currentUser").(user.User)
 	userRole := currentUser.Role
 	if userRole != "admin" {
-		res := helper.ApiResponse("New Data Has Been Failed", http.StatusBadRequest, "failed", errors.New("kamu bukan admin"))
+		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "failed", errors.New("kamu bukan admin"))
 
 		c.JSON(http.StatusBadRequest, res)
 		return
@@ -39,9 +41,9 @@ func (ctrl *itemController) CreateNewItem(c *gin.Context) {
 		return
 	}
 
-	newitem, errUser := ctrl.itemService.CreateNewItem(input)
-	if errUser != nil {
-		res := helper.ApiResponse("New Data Has Been Failed", http.StatusBadRequest, "failed", errUser)
+	newitem, errItem := ctrl.itemService.CreateNewItem(input)
+	if errItem != nil {
+		res := helper.ApiResponse("New Data Has Been Failed", http.StatusBadRequest, "failed", errItem)
 
 		c.JSON(http.StatusBadRequest, res)
 		return
@@ -71,6 +73,16 @@ func (ctrl *itemController) GetItems(c *gin.Context) {
 func (ctrl *itemController) UpdateItems(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 
+	// cek apakah yg akses adalah admin
+	currentUser := c.MustGet("currentUser").(user.User)
+	userRole := currentUser.Role
+	if userRole != "admin" {
+		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "failed", errors.New("kamu bukan admin"))
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
 	var input item.InputUpdateItem
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -95,6 +107,16 @@ func (ctrl *itemController) UpdateItems(c *gin.Context) {
 
 func (ctrl *itemController) DeleteItems(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
+
+	// cek apakah yg akses adalah admin
+	currentUser := c.MustGet("currentUser").(user.User)
+	userRole := currentUser.Role
+	if userRole != "admin" {
+		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "failed", errors.New("kamu bukan admin"))
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
 
 	itemById, err := ctrl.itemService.GetById(id)
 	if err != nil {
@@ -137,4 +159,68 @@ func (ctrl *itemController) DeleteItems(c *gin.Context) {
 	res := helper.ApiResponse("Any Error", http.StatusBadRequest, "failed", itemDelete)
 
 	c.JSON(http.StatusCreated, res)
+}
+
+func (h *itemController) UploadImage(c *gin.Context) {
+	item_id, _ := strconv.Atoi(c.Param("id"))
+
+	// cek apakah yg akses adalah admin
+	currentUser := c.MustGet("currentUser").(user.User)
+	userRole := currentUser.Role
+	if userRole != "admin" {
+		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "failed", errors.New("kamu bukan admin"))
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	// cek apakah item ada
+	itemById, err := h.itemService.GetById(item_id)
+	if err != nil {
+		res := helper.ApiResponse("Item Not Found", http.StatusBadRequest, "failed", err)
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+	if itemById.ID == 0 {
+		res := helper.ApiResponse("User Not Found", http.StatusBadRequest, "failed", err)
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	// get image dari form file
+	file, err := c.FormFile("image")
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	path := fmt.Sprintf("images/%s", file.Filename)
+
+	errImage := c.SaveUploadedFile(file, path)
+	if errImage != nil {
+		data := gin.H{"is_uploaded": false}
+		res := helper.ApiResponse("Failed to Upload Image Image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	_, errItem := h.itemService.SaveImage(item_id, path)
+	if errItem != nil {
+		data := gin.H{"is_uploaded": false}
+		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	data := gin.H{"is_uploaded": true}
+	res := helper.ApiResponse("Avatar Successfuly Uploaded", http.StatusOK, "success", data)
+
+	c.JSON(http.StatusOK, res)
 }

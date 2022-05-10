@@ -9,6 +9,7 @@ import (
 	"order_kafe/database"
 	"order_kafe/helper"
 	"order_kafe/item"
+	"order_kafe/order"
 	"order_kafe/user"
 	"strings"
 
@@ -23,7 +24,7 @@ func main() {
 
 	// orderRepo := order.NewOrderRepository(db)
 	// userRepo := user.NewUserRepository(db)
-	// orderService := order.NewOrderService(orderRepo, userRepo)
+	//
 
 	// var input order.InputNewOrder
 	// input.UserID = 7
@@ -44,6 +45,10 @@ func main() {
 	itemService := item.NewItemService(itemRepo, categoryRepo)
 	itemController := controller.NewItemHandler(itemService)
 
+	orderRepo := order.NewOrderRepository(db)
+	orderService := order.NewOrderService(orderRepo, userRepo)
+	orderController := controller.NewOrderHandler(orderService)
+
 	router := gin.Default()
 	api := router.Group("/api/v1")
 
@@ -51,18 +56,22 @@ func main() {
 	api.POST("/users", userController.UserRegister)
 	api.POST("/sessions", userController.Login)
 	api.POST("/email_checkers", userController.CheckEmailAvailability)
-	api.PUT("/users/:id", userController.UpdateData)
+	//api.PUT("/users/:id", userController.UpdateData)
 	api.POST("/avatars", authMiddleware(authService, userService), userController.UploadAvatar)
 
 	// item domain
 	api.POST("/items", authMiddleware(authService, userService), itemController.CreateNewItem)
+	api.POST("/items/:id", authMiddleware(authService, userService), itemController.UploadImage)
 	api.GET("/items", itemController.GetItems)
-	api.PUT("/items/:id", itemController.UpdateItems)
-	api.DELETE("/items/:id", itemController.DeleteItems)
+	api.PUT("/items/:id", authMiddleware(authService, userService), itemController.UpdateItems)
+	api.DELETE("/items/:id", authMiddleware(authService, userService), itemController.DeleteItems)
 
 	// category domain
 	api.POST("/categories", categoryController.CreateNewCategory)
 	api.GET("/categories", categoryController.GetCategories)
+
+	// order domain
+	api.POST("/orders", authMiddleware(authService, userService), orderController.CreateNewOrder)
 
 	router.Run(":8080")
 }
