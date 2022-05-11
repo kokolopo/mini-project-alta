@@ -5,6 +5,7 @@ import (
 	detail "order_kafe/detail_order"
 	"order_kafe/item"
 	"order_kafe/order"
+	"order_kafe/transaction"
 	"order_kafe/user"
 )
 
@@ -19,5 +20,6 @@ func RegisterModel() []Model {
 		{Model: category.Categorie{}},
 		{Model: order.Order{}},
 		{Model: detail.DetailOrder{}},
+		{Model: transaction.Transaction{}},
 	}
 }

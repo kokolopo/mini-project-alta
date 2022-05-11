@@ -25,7 +25,7 @@ func (ctrl *itemController) CreateNewItem(c *gin.Context) {
 	currentUser := c.MustGet("currentUser").(user.User)
 	userRole := currentUser.Role
 	if userRole != "admin" {
-		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "failed", errors.New("kamu bukan admin"))
+		res := helper.ApiResponse("Failed to Create Menu", http.StatusBadRequest, "failed", errors.New("kamu bukan admin"))
 
 		c.JSON(http.StatusBadRequest, res)
 		return

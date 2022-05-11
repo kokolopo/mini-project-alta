@@ -11,6 +11,7 @@ import (
 	"order_kafe/helper"
 	"order_kafe/item"
 	"order_kafe/order"
+	"order_kafe/transaction"
 	"order_kafe/user"
 	"strings"
 
@@ -42,6 +43,10 @@ func main() {
 	orderService := order.NewOrderService(orderRepo, userRepo)
 	orderController := controller.NewOrderHandler(orderService, detailService)
 
+	transactionRepo := transaction.NewTransactionRepository(db)
+	transactionService := transaction.NewTransactionService(transactionRepo)
+	transactionController := controller.NewTransactionHandler(transactionService)
+
 	router := gin.Default()
 	api := router.Group("/api/v1")
 
@@ -65,6 +70,9 @@ func main() {
 
 	// order domain
 	api.POST("/orders", authMiddleware(authService, userService), orderController.CreateNewOrder)
+
+	// transaction domain
+	api.GET("transactions", authMiddleware(authService, userService), transactionController.GetUserTransactions)
 
 	router.Run(":8080")
 }
