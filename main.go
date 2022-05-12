@@ -72,7 +72,8 @@ func main() {
 	api.POST("/orders", authMiddleware(authService, userService), orderController.CreateNewOrder)
 
 	// transaction domain
-	api.GET("transactions", authMiddleware(authService, userService), transactionController.GetUserTransactions)
+	api.GET("user/transactions", authMiddleware(authService, userService), transactionController.GetUserTransactions)
+	api.GET("transactions", authMiddleware(authService, userService), transactionController.GetTransactions)
 
 	router.Run(":8080")
 }
