@@ -18,7 +18,7 @@ func NewTransactionRepository(db *gorm.DB) *transactionRepository {
 func (r *transactionRepository) GetByUserId(userId int) ([]Transaction, error) {
 	var transactions []Transaction
 
-	err := r.DB.Where("user_id = ?", userId).Order("id desc").Find(&transactions).Error
+	err := r.DB.Preload("User").Where("user_id = ?", userId).Order("id desc").Find(&transactions).Error
 	if err != nil {
 		return transactions, err
 	}
@@ -29,7 +29,7 @@ func (r *transactionRepository) GetByUserId(userId int) ([]Transaction, error) {
 func (r *transactionRepository) GetTransactions() ([]Transaction, error) {
 	var transactions []Transaction
 
-	err := r.DB.Order("id desc").Find(&transactions).Error
+	err := r.DB.Preload("User").Order("id desc").Find(&transactions).Error
 	if err != nil {
 		return transactions, err
 	}

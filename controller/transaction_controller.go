@@ -33,7 +33,8 @@ func (ctrl *transactionController) GetUserTransactions(c *gin.Context) {
 		return
 	}
 
-	res := helper.ApiResponse("Fetch All Data of Transactions", http.StatusCreated, "success", transactions)
+	formatter := transaction.FormatUserTransactions(transactions)
+	res := helper.ApiResponse("Fetch All Data of Transactions", http.StatusCreated, "success", formatter)
 
 	c.JSON(http.StatusCreated, res)
 }
@@ -57,7 +58,8 @@ func (ctrl *transactionController) GetTransactions(c *gin.Context) {
 		return
 	}
 
-	res := helper.ApiResponse("Fetch All Data of Transactions", http.StatusCreated, "success", transactions)
+	formatter := transaction.FormatUserTransactions(transactions)
+	res := helper.ApiResponse("Fetch All Data of Transactions", http.StatusCreated, "success", formatter)
 
 	c.JSON(http.StatusCreated, res)
 }
