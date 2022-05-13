@@ -10,6 +10,8 @@ type Config struct {
 	DB_HOST        string
 	DB_NAME        string
 	JWT_KEY        string
+	VT_SERVER_KEY  string
+	VT_CLIENT_KEY  string
 }
 
 func InitConfiguration() Config {
@@ -24,6 +26,8 @@ func InitConfiguration() Config {
 		DB_PORT:        GetOrDefault("DB_PORT", "3306"),
 		DB_HOST:        GetOrDefault("DB_HOST", "localhost"),
 		JWT_KEY:        GetOrDefault("JWT_KEY", "FuFuFuFu"),
+		VT_SERVER_KEY:  GetOrDefault("VT_SERVER_KEY", "VT_SERVER_KEY"),
+		VT_CLIENT_KEY:  GetOrDefault("VT_CLIENT_KEY", "VT_CLIENT_KEY"),
 	}
 }
 

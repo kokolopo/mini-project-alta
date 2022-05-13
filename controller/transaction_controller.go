@@ -63,3 +63,32 @@ func (ctrl *transactionController) GetTransactions(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, res)
 }
+
+func (ctrl *transactionController) CreateTransaction(c *gin.Context) {
+	var input transaction.InputCreateTansaction
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errMessage := gin.H{"errors": errors}
+
+		res := helper.ApiResponse("Failed to Create Transaction", http.StatusUnprocessableEntity, "failed", errMessage)
+		c.JSON(http.StatusUnprocessableEntity, res)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(user.User)
+	input.User = currentUser
+
+	newTrans, errTrans := ctrl.transactionService.CreateTransaction(input)
+	if errTrans != nil {
+		res := helper.ApiResponse("Failed to Create Transaction", http.StatusUnprocessableEntity, "failed", errTrans)
+		c.JSON(http.StatusUnprocessableEntity, res)
+		return
+	}
+
+	formatter := transaction.FormatTransaction(newTrans)
+
+	res := helper.ApiResponse("Success to Create Transactions", http.StatusCreated, "success", formatter)
+	c.JSON(http.StatusCreated, res)
+}

@@ -36,3 +36,29 @@ func FormatUserTransactions(transactions []Transaction) []UserTransactionFormatt
 
 	return transactionsFormatter
 }
+
+type TransactionFormatter struct {
+	ID         int       `json:"id"`
+	OrderID    int       `json:"order_id"`
+	UserID     int       `json:"user_id"`
+	Amount     int       `json:"amount"`
+	Status     string    `json:"status"`
+	Code       string    `json:"code"`
+	PaymentUrl string    `json:"payment_url"`
+	CreatedAt  time.Time `json:"created_at"`
+}
+
+func FormatTransaction(transaction Transaction) TransactionFormatter {
+	formatter := TransactionFormatter{}
+
+	formatter.ID = transaction.ID
+	formatter.OrderID = transaction.OrderID
+	formatter.UserID = transaction.UserID
+	formatter.Amount = transaction.Amount
+	formatter.Status = transaction.Status
+	formatter.Code = transaction.Code
+	formatter.PaymentUrl = transaction.PaymentUrl
+	formatter.CreatedAt = transaction.CreatedAt
+
+	return formatter
+}
