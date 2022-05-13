@@ -57,3 +57,18 @@ func (ctrl *orderController) CreateNewOrder(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, res)
 }
+
+func (ctrl *orderController) GetUserOrders(c *gin.Context) {
+	items, err := ctrl.orderService.GetOrders()
+	if err != nil {
+		res := helper.ApiResponse("Data Not Found or Error", http.StatusBadRequest, "failed", err)
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	formatter := order.FormatUserOrders(items)
+	res := helper.ApiResponse("Fetch All Data of User Order", http.StatusOK, "success", formatter)
+
+	c.JSON(http.StatusCreated, res)
+}

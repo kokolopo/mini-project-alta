@@ -4,6 +4,7 @@ import "order_kafe/user"
 
 type OrderService interface {
 	CreateOrder(id int) (Order, error)
+	GetOrders() ([]Order, error)
 }
 
 type orderService struct {
@@ -32,4 +33,13 @@ func (s *orderService) CreateOrder(id int) (Order, error) {
 	}
 
 	return newOrder, nil
+}
+
+func (s *orderService) GetOrders() ([]Order, error) {
+	items, err := s.repository.FetchAll()
+	if err != nil {
+		return items, err
+	}
+
+	return items, nil
 }

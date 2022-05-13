@@ -4,6 +4,7 @@ import "time"
 
 type UserTransactionFormatter struct {
 	ID        int       `json:"id"`
+	OrderID   int       `json:"order_id"`
 	Fullname  string    `json:"fullname"`
 	Amount    int       `json:"amount"`
 	CreatedAt time.Time `json:"created_at"`
@@ -13,6 +14,7 @@ func FormatUserTransaction(transaction Transaction) UserTransactionFormatter {
 	formatter := UserTransactionFormatter{}
 
 	formatter.ID = transaction.ID
+	formatter.OrderID = transaction.OrderID
 	formatter.Fullname = transaction.User.Fullname
 	formatter.Amount = transaction.Amount
 	formatter.CreatedAt = transaction.CreatedAt

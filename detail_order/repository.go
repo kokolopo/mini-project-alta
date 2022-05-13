@@ -1,9 +1,13 @@
 package detail
 
-import "gorm.io/gorm"
+import (
+	"order_kafe/order"
+
+	"gorm.io/gorm"
+)
 
 type DetailOrderRepository interface {
-	Save(detail []DetailOrder) ([]DetailOrder, error)
+	Save(detail []order.DetailOrder) ([]order.DetailOrder, error)
 }
 
 type detailOrderRepository struct {
@@ -14,7 +18,7 @@ func NewDetailOrderRepository(db *gorm.DB) *detailOrderRepository {
 	return &detailOrderRepository{db}
 }
 
-func (r *detailOrderRepository) Save(detail []DetailOrder) ([]DetailOrder, error) {
+func (r *detailOrderRepository) Save(detail []order.DetailOrder) ([]order.DetailOrder, error) {
 	err := r.DB.Create(&detail).Error
 	if err != nil {
 		return detail, err

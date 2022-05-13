@@ -70,6 +70,7 @@ func main() {
 
 	// order domain
 	api.POST("/orders", authMiddleware(authService, userService), orderController.CreateNewOrder)
+	api.GET("orders/", orderController.GetUserOrders)
 
 	// transaction domain
 	api.GET("user/transactions", authMiddleware(authService, userService), transactionController.GetUserTransactions)
