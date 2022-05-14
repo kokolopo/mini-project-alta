@@ -6,6 +6,7 @@ type UserRepository interface {
 	Save(user User) (User, error)
 	FindById(id int) (User, error)
 	FindByEmail(email string) (User, error)
+	//UpdateOneByID(id int, user User) (User, error)
 	Update(user User) (User, error)
 }
 
@@ -48,7 +49,7 @@ func (r *userRepository) FindByEmail(email string) (User, error) {
 }
 
 func (r *userRepository) Update(user User) (User, error) {
-	err := r.DB.Save(&user).Error
+	err := r.DB.UpdateColumns(&user).Error
 
 	if err != nil {
 		return user, err
@@ -56,3 +57,12 @@ func (r *userRepository) Update(user User) (User, error) {
 
 	return user, nil
 }
+
+// func (r *userRepository) UpdateOneByID(id int, user User) (User, error) {
+// 	err := r.DB.Where("id = ?", id).UpdateColumns(&user).Error
+// 	if err != nil {
+// 		return user, err
+// 	}
+
+// 	return user, nil
+// }
