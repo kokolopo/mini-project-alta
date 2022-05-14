@@ -89,10 +89,6 @@ func (s *itemService) UpdateItem(id int, input InputUpdateItem) (Item, error) {
 		return item, errItem
 	}
 
-	// if input.User.Role != "admin" {
-	// 	return item, errors.New("Not An Admin")
-	// }
-
 	item.Name = input.Name
 	item.Description = input.Description
 	item.Price = input.Price

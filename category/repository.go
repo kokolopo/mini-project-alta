@@ -6,8 +6,7 @@ type CategoryRepository interface {
 	Save(category Categorie) (Categorie, error)
 	FetchAll() ([]Categorie, error)
 	FindById(id int) (Categorie, error)
-	// Update(categorie Categorie) (Categorie, error)
-	// Delete(categorie Categorie) (Categorie, error)
+	Delete(categorie Categorie) (Categorie, error)
 }
 
 type categoryRepository struct {
@@ -46,4 +45,13 @@ func (r *categoryRepository) FindById(id int) (Categorie, error) {
 	}
 
 	return category, nil
+}
+
+func (r *categoryRepository) Delete(categorie Categorie) (Categorie, error) {
+	err := r.DB.Delete(&categorie).Error
+	if err != nil {
+		return categorie, err
+	}
+
+	return categorie, nil
 }

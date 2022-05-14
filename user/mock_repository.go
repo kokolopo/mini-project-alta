@@ -38,8 +38,8 @@ func (r *RepositoryMock) FindById(id int) (User, error) {
 	if argument.Get(0) == nil {
 		return User{}, errors.New("ada yang salah")
 	} else {
-		category := argument.Get(0).(User)
-		return category, nil
+		user := argument.Get(0).(User)
+		return user, nil
 	}
 }
 

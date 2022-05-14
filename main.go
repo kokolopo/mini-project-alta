@@ -67,8 +67,9 @@ func main() {
 	api.DELETE("/items/:id", authMiddleware(authService, userService), itemController.DeleteItems)
 
 	// category domain
-	api.POST("/categories", categoryController.CreateNewCategory)
+	api.POST("/categories", authMiddleware(authService, userService), categoryController.CreateNewCategory)
 	api.GET("/categories", categoryController.GetCategories)
+	api.DELETE("/categories/:id", authMiddleware(authService, userService), categoryController.DeleteCategory)
 
 	// order domain
 	api.POST("/orders", authMiddleware(authService, userService), orderController.CreateNewOrder)

@@ -20,5 +20,4 @@ type InputUpdateItem struct {
 	CategoryID  int     `json:"category_id"`
 	IsAvailable int     `json:"is_available"`
 	User        user.User
-	//ImageUrl    string  `json:"image_url"`
 }

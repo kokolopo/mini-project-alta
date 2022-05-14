@@ -3,9 +3,10 @@ package category
 type CategoryService interface {
 	CreateNewCategory(input InputNewCategory) (Categorie, error)
 	GetAllICategory() ([]Categorie, error)
+	GetCategoryById(id int) (Categorie, error)
+	DeleteCategory(id int) (Categorie, error)
 	// GetById(id int) (Categorie, error)
 	// UpdateItem(id int, input InputNewCategory) (Categorie, error)
-	// DeleteItem(id int) (Categorie, error)
 }
 
 type categoryService struct {
@@ -38,4 +39,27 @@ func (s *categoryService) GetAllICategory() ([]Categorie, error) {
 	}
 
 	return categories, nil
+}
+
+func (s *categoryService) DeleteCategory(id int) (Categorie, error) {
+	category, err := s.repository.FindById(id)
+	if err != nil {
+		return category, err
+	}
+
+	deleteItem, errDel := s.repository.Delete(category)
+	if errDel != nil {
+		return deleteItem, errDel
+	}
+
+	return deleteItem, nil
+}
+
+func (s *categoryService) GetCategoryById(id int) (Categorie, error) {
+	category, err := s.repository.FindById(id)
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
 }
