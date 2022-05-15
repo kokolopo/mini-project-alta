@@ -35,7 +35,7 @@ func (ctrl *itemController) CreateNewItem(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
-		res := helper.ApiResponse("New Data Has Been Failed", http.StatusUnprocessableEntity, "failed", err)
+		res := helper.ApiResponse("Failed create new menu", http.StatusUnprocessableEntity, "failed", err)
 
 		c.JSON(http.StatusUnprocessableEntity, res)
 		return
