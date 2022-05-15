@@ -83,7 +83,7 @@ func (h *userController) Login(c *gin.Context) {
 
 	formatter := user.FormatUser(loginUser, token)
 
-	res := helper.ApiResponse("Successfuly Login", http.StatusOK, "success", formatter)
+	res := helper.ApiResponse("berhasil login", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusCreated, res)
 }
