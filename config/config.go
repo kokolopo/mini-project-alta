@@ -20,11 +20,11 @@ func InitConfiguration() Config {
 
 	return Config{
 		SERVER_ADDRESS: GetOrDefault("SERVER_ADDRESS", "0.0.0.0:8080"),
-		DB_USERNAME:    GetOrDefault("DB_USERNAME", "root"),
-		DB_PASSWORD:    GetOrDefault("DB_PASSWORD", ""),
+		DB_USERNAME:    GetOrDefault("DB_USERNAME", "admin"),
+		DB_PASSWORD:    GetOrDefault("DB_PASSWORD", "kokolopo123"),
 		DB_NAME:        GetOrDefault("DB_NAME", "mini_project"),
 		DB_PORT:        GetOrDefault("DB_PORT", "3306"),
-		DB_HOST:        GetOrDefault("DB_HOST", "localhost"),
+		DB_HOST:        GetOrDefault("DB_HOST", "database-2.ch0glfhlz2py.ap-southeast-1.rds.amazonaws.com"),
 		JWT_KEY:        GetOrDefault("JWT_KEY", "FuFuFuFu"),
 		VT_SERVER_KEY:  GetOrDefault("VT_SERVER_KEY", "VT_SERVER_KEY"),
 		VT_CLIENT_KEY:  GetOrDefault("VT_CLIENT_KEY", "VT_CLIENT_KEY"),
