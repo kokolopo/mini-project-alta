@@ -66,7 +66,7 @@ func (h *userController) Login(c *gin.Context) {
 
 	loginUser, errLogin := h.userService.Login(input)
 	if errLogin != nil {
-		res := helper.ApiResponse("Login Failed", http.StatusUnprocessableEntity, "failed", errLogin)
+		res := helper.ApiResponse("Login Gagal", http.StatusUnprocessableEntity, "failed", errLogin)
 
 		c.JSON(http.StatusUnprocessableEntity, res)
 		return
