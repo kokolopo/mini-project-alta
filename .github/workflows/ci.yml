@@ -1,0 +1,19 @@
+name: testing github workflow
+on: [pull_request]
+jobs:
+  Coba-Github-Workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "CI step go go go"
+  
+  ini-unit-test:
+    runs-on: ubuntu-latest
+    steps:
+       - uses: actions/checkout@v3
+
+       - name: Setup go
+         uses: actions/setup-go@v3
+         with:
+           go-version: '1.18'
+
+       - run: go test -v ./...
