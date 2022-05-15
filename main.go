@@ -52,7 +52,7 @@ func main() {
 	router := gin.Default()
 	api := router.Group("/api/v1")
 
-	// user domain
+	// user domain //
 	api.POST("/users", userController.UserRegister)
 	api.POST("/sessions", userController.Login)
 	api.POST("/email_checkers", userController.CheckEmailAvailability)
