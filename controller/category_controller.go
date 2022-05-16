@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"order_kafe/category"
 	"order_kafe/helper"
+	"order_kafe/user"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,6 +18,14 @@ func NewCategoryHandler(categoryService category.CategoryService) *categoryContr
 }
 
 func (ctrl *categoryController) CreateNewCategory(c *gin.Context) {
+	currentUser := c.MustGet("currentUser").(user.User)
+	userId := currentUser.Role
+	if userId != "admin" {
+		// res := helper.ApiResponse("New Data Has Been Failed", http.StatusUnprocessableEntity, "failed", error)
+
+		c.JSON(http.StatusUnprocessableEntity, "bukan admin")
+		return
+	}
 	var input category.InputNewCategory
 
 	err := c.ShouldBindJSON(&input)
