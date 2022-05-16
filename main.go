@@ -56,7 +56,7 @@ func main() {
 	api.POST("/users", userController.UserRegister)
 	api.POST("/sessions", userController.Login)
 	api.POST("/email_checkers", userController.CheckEmailAvailability)
-	//api.PUT("/users/:id", userController.UpdateData)
+	api.PUT("/users", authMiddleware(authService, userService), userController.UpdateData)
 	api.POST("/avatars", authMiddleware(authService, userService), userController.UploadAvatar)
 
 	// item domain
@@ -73,7 +73,7 @@ func main() {
 
 	// order domain
 	api.POST("/orders", authMiddleware(authService, userService), orderController.CreateNewOrder)
-	api.GET("/orders", orderController.GetUserOrders)
+	api.GET("/orders", authMiddleware(authService, userService), orderController.GetUserOrders)
 
 	// transaction domain
 	api.GET("user/transactions", authMiddleware(authService, userService), transactionController.GetUserTransactions)

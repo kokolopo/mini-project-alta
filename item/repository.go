@@ -30,7 +30,7 @@ func (r *itemRepository) Save(item Item) (Item, error) {
 func (r *itemRepository) FetchAll() ([]Item, error) {
 	var items []Item
 
-	err := r.DB.Find(&items).Error
+	err := r.DB.Preload("Category").Find(&items).Error
 	if err != nil {
 		return items, err
 	}

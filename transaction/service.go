@@ -47,7 +47,7 @@ func (s *transactionService) CreateTransaction(input InputCreateTansaction) (Tra
 	transaction.OrderID = input.OrderID
 	transaction.Amount = input.Amount
 	transaction.Status = "pending"
-	transaction.Code = "ODR" + strconv.Itoa(input.OrderID)
+	transaction.Code = "ODR" + strconv.Itoa(input.OrderID) + "-" + strconv.Itoa(input.User.ID)
 
 	newTrans, err := s.repository.Save(transaction)
 	if err != nil {

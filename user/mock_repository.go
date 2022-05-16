@@ -63,6 +63,15 @@ func (r *RepositoryMock) Update(user User) (User, error) {
 		return newUser, nil
 	}
 }
+func (r *RepositoryMock) UpdateByID(user User) (User, error) {
+	argument := r.Mock.Called(user)
+	if argument.Get(0) == nil {
+		return user, errors.New("ada yang salah")
+	} else {
+		newUser := argument.Get(0).(User)
+		return newUser, nil
+	}
+}
 
 func (r *RepositoryMock) DeleteUser(user User) (User, error) {
 	argument := r.Mock.Called(user)

@@ -16,10 +16,7 @@ type InputCheckEmail struct {
 }
 
 type InputUpdate struct {
-	ID       int
 	Fullname string `json:"fullname"`
 	Email    string `json:"email" binding:"email"`
-	Avatar   string `json:"avatar"`
 	Password string `json:"password"`
-	Error    error
 }

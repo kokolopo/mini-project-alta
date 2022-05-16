@@ -11,7 +11,7 @@ type UserService interface {
 	Login(input InputLogin) (User, error)
 	IsEmailAvailable(input InputCheckEmail) (bool, error)
 	SaveAvatar(id int, fileLocation string) (User, error)
-	UpdateUser(input InputUpdate) (User, error)
+	UpdateUser(id int, input InputUpdate) (User, error)
 	GetUserById(id int) (User, error)
 }
 
@@ -84,19 +84,20 @@ func (s *userService) IsEmailAvailable(input InputCheckEmail) (bool, error) {
 	return false, nil
 }
 
-func (s *userService) UpdateUser(input InputUpdate) (User, error) {
-	user, err := s.repository.FindById(input.ID)
-	if err != nil {
-		return user, err
+func (s *userService) UpdateUser(id int, input InputUpdate) (User, error) {
+	user, errUser := s.repository.FindById(id)
+	if errUser != nil {
+		return user, errUser
 	}
 
+	user.ID = id
 	user.Fullname = input.Fullname
 	user.Email = input.Email
 	user.Password = input.Password
 
-	updatedUser, err := s.repository.Update(user)
-	if err != nil {
-		return updatedUser, err
+	updatedUser, errUpdate := s.repository.UpdateByID(user)
+	if errUpdate != nil {
+		return updatedUser, errUpdate
 	}
 
 	return updatedUser, nil

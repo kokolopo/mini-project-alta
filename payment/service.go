@@ -1,6 +1,7 @@
 package payment
 
 import (
+	"order_kafe/config"
 	"order_kafe/user"
 	"strconv"
 
@@ -20,8 +21,8 @@ func NewService() *service {
 
 func (s *service) GetPaymentUrl(transaction Transaction, user user.User) (string, error) {
 	midclient := midtrans.NewClient()
-	midclient.ServerKey = ""
-	midclient.ClientKey = ""
+	midclient.ServerKey = config.InitConfiguration().VT_SERVER_KEY
+	midclient.ClientKey = config.InitConfiguration().VT_CLIENT_KEY
 	midclient.APIEnvType = midtrans.Sandbox
 
 	snapGateway := midtrans.SnapGateway{
