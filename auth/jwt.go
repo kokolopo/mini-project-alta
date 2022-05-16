@@ -2,10 +2,15 @@ package auth
 
 import (
 	"errors"
+	"net/http"
 	"order_kafe/config"
+	"order_kafe/helper"
+	"order_kafe/user"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 )
 
 type Service interface {
@@ -55,4 +60,48 @@ func (s *jwtService) ValidateToken(encodedToken string) (*jwt.Token, error) {
 	}
 
 	return token, nil
+}
+
+func AuthMiddleware(authService Service, userService user.UserService) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		authHeader := c.GetHeader("Authorization")
+
+		if !strings.Contains(authHeader, "Bearer") {
+			response := helper.ApiResponse("Unauthorized1", http.StatusUnauthorized, "error", nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
+			return
+		}
+
+		tokenString := ""
+		arrayToken := strings.Split(authHeader, " ")
+		if len(arrayToken) == 2 {
+			tokenString = arrayToken[1]
+		}
+
+		token, err := authService.ValidateToken(tokenString)
+		if err != nil {
+			response := helper.ApiResponse("Unauthorized2", http.StatusUnauthorized, "error", nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
+			return
+		}
+
+		claim, ok := token.Claims.(jwt.MapClaims)
+
+		if !ok || !token.Valid {
+			response := helper.ApiResponse("Unauthorized3", http.StatusUnauthorized, "error", nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
+			return
+		}
+
+		userID := int(claim["id"].(float64))
+
+		user, err := userService.GetUserById(userID)
+		if err != nil {
+			response := helper.ApiResponse("Unauthorized4", http.StatusUnauthorized, "error", nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
+			return
+		}
+
+		c.Set("currentUser", user)
+	}
 }

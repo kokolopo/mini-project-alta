@@ -12,7 +12,6 @@ import (
 	"order_kafe/payment"
 	"order_kafe/transaction"
 	"order_kafe/user"
-	"order_kafe/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -53,29 +52,29 @@ func main() {
 	api.POST("/users", userController.UserRegister)
 	api.POST("/sessions", userController.Login)
 	api.POST("/email_checkers", userController.CheckEmailAvailability)
-	api.PUT("/users", utils.AuthMiddleware(authService, userService), userController.UpdateData)
-	api.POST("/avatars", utils.AuthMiddleware(authService, userService), userController.UploadAvatar)
+	api.PUT("/users", auth.AuthMiddleware(authService, userService), userController.UpdateData)
+	api.POST("/avatars", auth.AuthMiddleware(authService, userService), userController.UploadAvatar)
 
 	// item domain
-	api.POST("/items", utils.AuthMiddleware(authService, userService), itemController.CreateNewItem)
-	api.POST("/items/:id", utils.AuthMiddleware(authService, userService), itemController.UploadImage)
+	api.POST("/items", auth.AuthMiddleware(authService, userService), itemController.CreateNewItem)
+	api.POST("/items/:id", auth.AuthMiddleware(authService, userService), itemController.UploadImage)
 	api.GET("/items", itemController.GetItems)
-	api.PUT("/items/:id", utils.AuthMiddleware(authService, userService), itemController.UpdateItems)
-	api.DELETE("/items/:id", utils.AuthMiddleware(authService, userService), itemController.DeleteItems)
+	api.PUT("/items/:id", auth.AuthMiddleware(authService, userService), itemController.UpdateItems)
+	api.DELETE("/items/:id", auth.AuthMiddleware(authService, userService), itemController.DeleteItems)
 
 	// category domain
-	api.POST("/categories", utils.AuthMiddleware(authService, userService), categoryController.CreateNewCategory)
+	api.POST("/categories", auth.AuthMiddleware(authService, userService), categoryController.CreateNewCategory)
 	api.GET("/categories", categoryController.GetCategories)
-	api.DELETE("/categories/:id", utils.AuthMiddleware(authService, userService), categoryController.DeleteCategory)
+	api.DELETE("/categories/:id", auth.AuthMiddleware(authService, userService), categoryController.DeleteCategory)
 
 	// order domain
-	api.POST("/orders", utils.AuthMiddleware(authService, userService), orderController.CreateNewOrder)
-	api.GET("/orders", utils.AuthMiddleware(authService, userService), orderController.GetUserOrders)
+	api.POST("/orders", auth.AuthMiddleware(authService, userService), orderController.CreateNewOrder)
+	api.GET("/orders", auth.AuthMiddleware(authService, userService), orderController.GetUserOrders)
 
 	// transaction domain
-	api.GET("user/transactions", utils.AuthMiddleware(authService, userService), transactionController.GetUserTransactions)
-	api.GET("/transactions", utils.AuthMiddleware(authService, userService), transactionController.GetTransactions)
-	api.POST("/transactions", utils.AuthMiddleware(authService, userService), transactionController.CreateTransaction)
+	api.GET("users/transactions", auth.AuthMiddleware(authService, userService), transactionController.GetUserTransactions)
+	api.GET("/transactions", auth.AuthMiddleware(authService, userService), transactionController.GetTransactions)
+	api.POST("/transactions", auth.AuthMiddleware(authService, userService), transactionController.CreateTransaction)
 
 	router.Run(":8080")
 }
