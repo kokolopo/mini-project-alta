@@ -23,12 +23,6 @@ func main() {
 	database.InitDatabase(conf)
 	db := database.DB
 
-	// data := []detail.InputNewDetailOrder{
-	// 	{OrderID: 2, ItemID: 2, Quantity: 2, Note: "banyakin yaaa"},
-	// 	{OrderID: 2, ItemID: 1, Quantity: 1, Note: "yg enak yaaa"},
-	// }
-	// detailService.SaveDetailOrder(data)
-
 	userRepo := user.NewUserRepository(db)
 	userService := user.NewUserService(userRepo)
 	authService := auth.NewService()
@@ -47,8 +41,6 @@ func main() {
 	detailService := detail.NewDetailOrderService(detailRepo)
 	orderService := order.NewOrderService(orderRepo, userRepo)
 	orderController := controller.NewOrderHandler(orderService, detailService)
-
-	//detailController := controller.NewDetailHandler(detailService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
@@ -73,7 +65,6 @@ func main() {
 
 	// order domain
 	api.POST("/orders", authMiddleware(authService, userService), orderController.CreateNewOrder)
-	//api.POST("/details", detailController.SaveDetailOrder)
 
 	router.Run(":8080")
 }
