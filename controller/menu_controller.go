@@ -65,7 +65,8 @@ func (ctrl *itemController) GetItems(c *gin.Context) {
 		return
 	}
 
-	res := helper.ApiResponse("Fetch All Data of Item", http.StatusOK, "success", items)
+	formatter := item.FormatItems(items)
+	res := helper.ApiResponse("Fetch All Data of Item", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusCreated, res)
 }

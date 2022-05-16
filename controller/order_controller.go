@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 	detail "order_kafe/detail_order"
 	"order_kafe/helper"
@@ -59,6 +60,16 @@ func (ctrl *orderController) CreateNewOrder(c *gin.Context) {
 }
 
 func (ctrl *orderController) GetUserOrders(c *gin.Context) {
+	// cek apakah yg akses adalah admin
+	currentUser := c.MustGet("currentUser").(user.User)
+	userRole := currentUser.Role
+	if userRole != "admin" {
+		res := helper.ApiResponse("Failed to Access", http.StatusBadRequest, "failed", errors.New("kamu bukan admin"))
+
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
 	items, err := ctrl.orderService.GetOrders()
 	if err != nil {
 		res := helper.ApiResponse("Data Not Found or Error", http.StatusBadRequest, "failed", err)

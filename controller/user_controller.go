@@ -6,7 +6,6 @@ import (
 	"order_kafe/auth"
 	"order_kafe/helper"
 	"order_kafe/user"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -164,25 +163,28 @@ func (h *userController) UploadAvatar(c *gin.Context) {
 }
 
 func (h *userController) UpdateData(c *gin.Context) {
-	idParam := c.Param("id")
-	id, _ := strconv.Atoi(idParam)
+	// cek yg akses login
+	currentUser := c.MustGet("currentUser").(user.User)
+	userId := currentUser.ID
 
 	var input user.InputUpdate
-
-	err := c.ShouldBind(&input)
+	err := c.ShouldBindJSON(&input)
 	if err != nil {
-		input.Error = err
-		c.HTML(http.StatusOK, "user_edit.html", input)
+		res := helper.ApiResponse("Update Data Has Been Failed", http.StatusUnprocessableEntity, "failed", err)
+
+		c.JSON(http.StatusUnprocessableEntity, res)
 		return
 	}
 
-	input.ID = id
+	updatedItem, errUpdate := h.userService.UpdateUser(userId, input)
+	if errUpdate != nil {
+		res := helper.ApiResponse("Update Data Has Been Failed", http.StatusUnprocessableEntity, "failed", err)
 
-	_, err = h.userService.UpdateUser(input)
-	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error.html", nil)
+		c.JSON(http.StatusUnprocessableEntity, res)
 		return
 	}
 
-	c.Redirect(http.StatusFound, "/users")
+	res := helper.ApiResponse("Update Data Has Been Success", http.StatusCreated, "success", updatedItem)
+
+	c.JSON(http.StatusCreated, res)
 }
