@@ -93,7 +93,13 @@ func (s *userService) UpdateUser(id int, input InputUpdate) (User, error) {
 	user.ID = id
 	user.Fullname = input.Fullname
 	user.Email = input.Email
-	user.Password = input.Password
+
+	//enkripsi password
+	passwordHash, errHash := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
+	if errHash != nil {
+		return user, errHash
+	}
+	user.Password = string(passwordHash)
 
 	updatedUser, errUpdate := s.repository.UpdateByID(user)
 	if errUpdate != nil {

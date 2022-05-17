@@ -41,7 +41,7 @@ func (ctrl *itemController) CreateNewItem(c *gin.Context) {
 		return
 	}
 
-	newitem, errItem := ctrl.itemService.CreateNewItem(input)
+	_, errItem := ctrl.itemService.CreateNewItem(input)
 	if errItem != nil {
 		res := helper.ApiResponse("New Data Has Been Failed", http.StatusBadRequest, "failed", errItem)
 
@@ -49,9 +49,8 @@ func (ctrl *itemController) CreateNewItem(c *gin.Context) {
 		return
 	}
 
-	//formatter := user.Formatitem(newitem)
-
-	res := helper.ApiResponse("New Item Has Been Created", http.StatusCreated, "success", newitem)
+	data := gin.H{"is_created": true}
+	res := helper.ApiResponse("New Item Has Been Created", http.StatusCreated, "success", data)
 
 	c.JSON(http.StatusCreated, res)
 }
@@ -93,7 +92,7 @@ func (ctrl *itemController) UpdateItems(c *gin.Context) {
 		return
 	}
 
-	updatedItem, errUpdate := ctrl.itemService.UpdateItem(id, input)
+	_, errUpdate := ctrl.itemService.UpdateItem(id, input)
 	if errUpdate != nil {
 		res := helper.ApiResponse("Update Data Has Been Failed", http.StatusUnprocessableEntity, "failed", err)
 
@@ -101,7 +100,8 @@ func (ctrl *itemController) UpdateItems(c *gin.Context) {
 		return
 	}
 
-	res := helper.ApiResponse("Update Data Has Been Success", http.StatusCreated, "success", updatedItem)
+	data := gin.H{"is_uploaded": true}
+	res := helper.ApiResponse("Update Data Has Been Success", http.StatusCreated, "success", data)
 
 	c.JSON(http.StatusCreated, res)
 }
@@ -134,7 +134,7 @@ func (ctrl *itemController) DeleteItems(c *gin.Context) {
 		return
 	}
 
-	itemDelete, errDel := ctrl.itemService.DeleteItem(itemById.ID)
+	_, errDel := ctrl.itemService.DeleteItem(itemById.ID)
 	if errDel != nil {
 		res := helper.ApiResponse("User Not Found", http.StatusBadRequest, "failed", errDel)
 
@@ -151,13 +151,14 @@ func (ctrl *itemController) DeleteItems(c *gin.Context) {
 	}
 
 	if cekItem.ID == 0 {
-		res := helper.ApiResponse("Successfuly Delete User", http.StatusOK, "success", nil)
+		res := helper.ApiResponse("Successfuly Delete Item", http.StatusOK, "success", nil)
 
 		c.JSON(http.StatusOK, res)
 		return
 	}
 
-	res := helper.ApiResponse("Any Error", http.StatusBadRequest, "failed", itemDelete)
+	data := gin.H{"is_deleted": true}
+	res := helper.ApiResponse("Any Error", http.StatusBadRequest, "failed", data)
 
 	c.JSON(http.StatusCreated, res)
 }

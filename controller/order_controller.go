@@ -45,16 +45,15 @@ func (ctrl *orderController) CreateNewOrder(c *gin.Context) {
 	orderId := newOrder.ID
 
 	// record data detail order
-	details, errDetals := ctrl.detailService.SaveDetailOrder(orderId, input)
+	_, errDetals := ctrl.detailService.SaveDetailOrder(orderId, input)
 	if errDetals != nil {
 		res := helper.ApiResponse("New Data Has Been Failed", http.StatusBadRequest, "failed", errDetals)
 
 		c.JSON(http.StatusBadRequest, res)
 	}
 
-	//formatter := user.Formatitem(newOrder)
-
-	res := helper.ApiResponse("Order Has Been Created", http.StatusCreated, "success", details)
+	data := gin.H{"is_recorded": true}
+	res := helper.ApiResponse("Order Has Been Created", http.StatusCreated, "success", data)
 
 	c.JSON(http.StatusCreated, res)
 }
