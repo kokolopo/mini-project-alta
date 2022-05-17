@@ -47,7 +47,7 @@ func main() {
 	// transaction domain
 	transactionRepo := transaction.NewTransactionRepository(db)
 	paymentService := payment.NewService()
-	transactionService := transaction.NewTransactionService(transactionRepo, paymentService, userRepo)
+	transactionService := transaction.NewTransactionService(transactionRepo, paymentService, userRepo, orderRepo)
 	transactionController := controller.NewTransactionHandler(transactionService)
 
 	router := gin.Default()
