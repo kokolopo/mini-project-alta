@@ -80,6 +80,7 @@ func main() {
 	api.GET("users/transactions", auth.AuthMiddleware(authService, userService), transactionController.GetUserTransactions)
 	api.GET("/transactions", auth.AuthMiddleware(authService, userService), transactionController.GetTransactions)
 	api.POST("/transactions", auth.AuthMiddleware(authService, userService), transactionController.CreateTransaction)
+	api.POST("/transactions/notification", transactionController.GetNotification)
 
 	router.Run(":8080")
 }
