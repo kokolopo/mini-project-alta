@@ -169,7 +169,7 @@ func (h *itemController) UploadImage(c *gin.Context) {
 	currentUser := c.MustGet("currentUser").(user.User)
 	userRole := currentUser.Role
 	if userRole != "admin" {
-		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "failed", errors.New("kamu bukan admin"))
+		res := helper.ApiResponse("Failed to Upload Image", http.StatusBadRequest, "failed", errors.New("kamu bukan admin"))
 
 		c.JSON(http.StatusBadRequest, res)
 		return
@@ -194,7 +194,7 @@ func (h *itemController) UploadImage(c *gin.Context) {
 	file, err := c.FormFile("image")
 	if err != nil {
 		data := gin.H{"is_uploaded": false}
-		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "error", data)
+		res := helper.ApiResponse("Failed to Upload Image", http.StatusBadRequest, "error", data)
 
 		c.JSON(http.StatusBadRequest, res)
 		return
@@ -205,7 +205,7 @@ func (h *itemController) UploadImage(c *gin.Context) {
 	errImage := c.SaveUploadedFile(file, path)
 	if errImage != nil {
 		data := gin.H{"is_uploaded": false}
-		res := helper.ApiResponse("Failed to Upload Image Image", http.StatusBadRequest, "error", data)
+		res := helper.ApiResponse("Failed to Upload Image", http.StatusBadRequest, "error", data)
 
 		c.JSON(http.StatusBadRequest, res)
 		return
@@ -214,7 +214,7 @@ func (h *itemController) UploadImage(c *gin.Context) {
 	_, errItem := h.itemService.SaveImage(item_id, path)
 	if errItem != nil {
 		data := gin.H{"is_uploaded": false}
-		res := helper.ApiResponse("Failed to Upload Avatar Image", http.StatusBadRequest, "error", data)
+		res := helper.ApiResponse("Failed to Upload Image", http.StatusBadRequest, "error", data)
 
 		c.JSON(http.StatusBadRequest, res)
 		return
