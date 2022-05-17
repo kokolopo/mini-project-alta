@@ -5,9 +5,9 @@ import "gorm.io/gorm"
 type OrderRepository interface {
 	Save(order Order) (Order, error)
 	FetchAll() ([]Order, error)
-	// FindById(id int) (Order, error)
+	FindById(id int) (Order, error)
+	Update(order Order) (Order, error)
 	// FindByEmail(email string) (Order, error)
-	// Update(user Order) (Order, error)
 }
 
 type orderRepository struct {
@@ -36,4 +36,26 @@ func (r *orderRepository) FetchAll() ([]Order, error) {
 	}
 
 	return orders, nil
+}
+
+func (r *orderRepository) FindById(id int) (Order, error) {
+	var order Order
+
+	err := r.DB.Preload("User").Where("id = ?", id).Find(&order).Error
+
+	if err != nil {
+		return order, err
+	}
+
+	return order, nil
+}
+
+func (r *orderRepository) Update(order Order) (Order, error) {
+	err := r.DB.Save(&order).Error
+
+	if err != nil {
+		return order, err
+	}
+
+	return order, nil
 }
