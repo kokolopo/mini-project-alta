@@ -6,6 +6,7 @@ type ItemFormatter struct {
 	Description string `json:"description"`
 	Price       int    `json:"price"`
 	Category    string `json:"category"`
+	ImageUrl    string `json:"image_url"`
 }
 
 func FormatItem(item Item) ItemFormatter {
@@ -16,6 +17,7 @@ func FormatItem(item Item) ItemFormatter {
 	formatter.Description = item.Description
 	formatter.Price = int(item.Price)
 	formatter.Category = item.Category.Name
+	formatter.ImageUrl = item.ImageUrl
 
 	return formatter
 }
