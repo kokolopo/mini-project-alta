@@ -12,15 +12,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type itemController struct {
+type ItemController struct {
 	itemService item.ItemService
 }
 
-func NewItemHandler(itemService item.ItemService) *itemController {
-	return &itemController{itemService}
+func NewItemHandler(itemService item.ItemService) *ItemController {
+	return &ItemController{itemService}
 }
 
-func (ctrl *itemController) CreateNewItem(c *gin.Context) {
+func (ctrl *ItemController) CreateNewItem(c *gin.Context) {
 	// cek apakah yg akses adalah admin
 	currentUser := c.MustGet("currentUser").(user.User)
 	userRole := currentUser.Role
@@ -55,7 +55,7 @@ func (ctrl *itemController) CreateNewItem(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
-func (ctrl *itemController) GetItems(c *gin.Context) {
+func (ctrl *ItemController) GetItems(c *gin.Context) {
 	items, err := ctrl.itemService.GetAllItem()
 	if err != nil {
 		res := helper.ApiResponse("Data Not Found or Error", http.StatusBadRequest, "failed", err)
@@ -70,7 +70,7 @@ func (ctrl *itemController) GetItems(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
-func (ctrl *itemController) UpdateItems(c *gin.Context) {
+func (ctrl *ItemController) UpdateItems(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	// cek apakah yg akses adalah admin
@@ -106,7 +106,7 @@ func (ctrl *itemController) UpdateItems(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
-func (ctrl *itemController) DeleteItems(c *gin.Context) {
+func (ctrl *ItemController) DeleteItems(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	// cek apakah yg akses adalah admin
@@ -163,7 +163,7 @@ func (ctrl *itemController) DeleteItems(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
-func (h *itemController) UploadImage(c *gin.Context) {
+func (h *ItemController) UploadImage(c *gin.Context) {
 	item_id, _ := strconv.Atoi(c.Param("id"))
 
 	// cek apakah yg akses adalah admin

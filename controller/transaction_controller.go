@@ -10,17 +10,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type transactionController struct {
+type TransactionController struct {
 	transactionService transaction.TransactionService
 	// orderService  order.OrderService
 	// detailService detail.DetailOrderService
 }
 
-func NewTransactionHandler(transactionService transaction.TransactionService) *transactionController {
-	return &transactionController{transactionService}
+func NewTransactionHandler(transactionService transaction.TransactionService) *TransactionController {
+	return &TransactionController{transactionService}
 }
 
-func (ctrl *transactionController) GetUserTransactions(c *gin.Context) {
+func (ctrl *TransactionController) GetUserTransactions(c *gin.Context) {
 	// didapatkan dari JWT
 	currentUser := c.MustGet("currentUser").(user.User)
 	userId := currentUser.ID
@@ -39,7 +39,7 @@ func (ctrl *transactionController) GetUserTransactions(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
-func (ctrl *transactionController) GetTransactions(c *gin.Context) {
+func (ctrl *TransactionController) GetTransactions(c *gin.Context) {
 	// cek apakah yg akses adalah admin
 	currentUser := c.MustGet("currentUser").(user.User)
 	userRole := currentUser.Role
@@ -64,7 +64,7 @@ func (ctrl *transactionController) GetTransactions(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
-func (ctrl *transactionController) CreateTransaction(c *gin.Context) {
+func (ctrl *TransactionController) CreateTransaction(c *gin.Context) {
 	var input transaction.InputCreateTansaction
 
 	err := c.ShouldBindJSON(&input)
@@ -93,7 +93,7 @@ func (ctrl *transactionController) CreateTransaction(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
-func (h *transactionController) GetNotification(c *gin.Context) {
+func (h *TransactionController) GetNotification(c *gin.Context) {
 	var input transaction.InputTransactionNotif
 
 	err := c.ShouldBindJSON(&input)

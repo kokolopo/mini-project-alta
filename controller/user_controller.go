@@ -10,16 +10,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type userController struct {
+type UserController struct {
 	userService user.UserService
 	authService auth.Service
 }
 
-func NewUserHandler(userService user.UserService, authService auth.Service) *userController {
-	return &userController{userService, authService}
+func NewUserHandler(userService user.UserService, authService auth.Service) *UserController {
+	return &UserController{userService, authService}
 }
 
-func (ctrl *userController) UserRegister(c *gin.Context) {
+func (ctrl *UserController) UserRegister(c *gin.Context) {
 	var input user.InputRegister
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
@@ -53,7 +53,7 @@ func (ctrl *userController) UserRegister(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
-func (h *userController) Login(c *gin.Context) {
+func (h *UserController) Login(c *gin.Context) {
 	var input user.InputLogin
 
 	err := c.ShouldBindJSON(&input)
@@ -87,7 +87,7 @@ func (h *userController) Login(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
-func (h *userController) CheckEmailAvailability(c *gin.Context) {
+func (h *UserController) CheckEmailAvailability(c *gin.Context) {
 	var input user.InputCheckEmail
 
 	err := c.ShouldBindJSON(&input)
@@ -122,7 +122,7 @@ func (h *userController) CheckEmailAvailability(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (h *userController) UploadAvatar(c *gin.Context) {
+func (h *UserController) UploadAvatar(c *gin.Context) {
 	file, err := c.FormFile("avatar")
 	if err != nil {
 		data := gin.H{"is_uploaded": false}
@@ -162,7 +162,7 @@ func (h *userController) UploadAvatar(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-func (h *userController) UpdateData(c *gin.Context) {
+func (h *UserController) UpdateData(c *gin.Context) {
 	// cek yg akses login
 	currentUser := c.MustGet("currentUser").(user.User)
 	userId := currentUser.ID
