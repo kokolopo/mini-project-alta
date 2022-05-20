@@ -11,15 +11,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type categoryController struct {
+type CategoryController struct {
 	categoryService category.CategoryService
 }
 
-func NewCategoryHandler(categoryService category.CategoryService) *categoryController {
-	return &categoryController{categoryService}
+func NewCategoryHandler(categoryService category.CategoryService) *CategoryController {
+	return &CategoryController{categoryService}
 }
 
-func (ctrl *categoryController) CreateNewCategory(c *gin.Context) {
+func (ctrl *CategoryController) CreateNewCategory(c *gin.Context) {
 	var input category.InputNewCategory
 
 	// cek apakah yg akses adalah admin
@@ -54,7 +54,7 @@ func (ctrl *categoryController) CreateNewCategory(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
-func (ctrl *categoryController) GetCategories(c *gin.Context) {
+func (ctrl *CategoryController) GetCategories(c *gin.Context) {
 	categories, err := ctrl.categoryService.GetAllICategory()
 	if err != nil {
 		res := helper.ApiResponse("Data Not Found or Error", http.StatusBadRequest, "failed", err)
@@ -68,7 +68,7 @@ func (ctrl *categoryController) GetCategories(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
-func (ctrl *categoryController) DeleteCategory(c *gin.Context) {
+func (ctrl *CategoryController) DeleteCategory(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	// cek apakah yg akses adalah admin

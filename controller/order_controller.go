@@ -11,16 +11,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type orderController struct {
+type OrderController struct {
 	orderService  order.OrderService
 	detailService detail.DetailOrderService
 }
 
-func NewOrderHandler(orderService order.OrderService, detailService detail.DetailOrderService) *orderController {
-	return &orderController{orderService, detailService}
+func NewOrderHandler(orderService order.OrderService, detailService detail.DetailOrderService) *OrderController {
+	return &OrderController{orderService, detailService}
 }
 
-func (ctrl *orderController) CreateNewOrder(c *gin.Context) {
+func (ctrl *OrderController) CreateNewOrder(c *gin.Context) {
 	// didapatkan dari JWT
 	currentUser := c.MustGet("currentUser").(user.User)
 	userId := currentUser.ID
@@ -58,7 +58,7 @@ func (ctrl *orderController) CreateNewOrder(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
-func (ctrl *orderController) GetUserOrders(c *gin.Context) {
+func (ctrl *OrderController) GetUserOrders(c *gin.Context) {
 	// cek apakah yg akses adalah admin
 	currentUser := c.MustGet("currentUser").(user.User)
 	userRole := currentUser.Role
